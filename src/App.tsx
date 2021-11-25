@@ -13,22 +13,19 @@ const App: React.FC = () => {
     const canvas = useRef<any>(null)
 
     useEffect((): void => {
-        draw()
-    }, [canvas, image])
-
-    const draw = (): void => {
         if (image?.html && canvas) {
             const txt: string = "@#$%?*+;:,."
+            //.,
             const dim: number = 4
-            const w: number = 500 //width and hight
+            const w: number = 500 //width and height
             const counter: number = 400
             const ctx: any = canvas.current.getContext('2d')
             ctx.fillStyle = "white"
             ctx.drawImage(image?.html, 0, 0, w, w)
 
-            let ascii: string[][] = new Array
+            let ascii: string[][] = []
             for (let i: number = 0; i < counter; i++) {
-                let asciiChars: string[] = new Array
+                let asciiChars: string[] = []
                 for (let j: number = 0; j < counter; j++) {
                     let x: number = i * dim
                     let y: number = j * dim + 8
@@ -40,6 +37,10 @@ const App: React.FC = () => {
                         let b: number = pixel[k + 2]
                         let alpha: number = pixel[k + 3]
                         let brightness: number = Math.floor((r + g + b + alpha) / 4)
+                        pixel[k] = brightness
+                        pixel[k + 1] = brightness
+                        pixel[k + 2] = brightness
+                        pixel[k + 2] = brightness
                         color += brightness
                     }
                     // console.log(color/pixel.length)
@@ -53,16 +54,18 @@ const App: React.FC = () => {
             }
             // hide image
             ctx.fillRect(0, 0, w, w)
-            for (let i = 0; i < counter; i++) {
-                for (let j = 0; j < counter; j++) {
-                    let x = i * dim
-                    let y = j * dim + 8
+            for (let i: number = 0; i < counter; i++) {
+                for (let j: number = 0; j < counter; j++) {
+                    let x: number = i * dim
+                    let y: number = j * dim + 8
                     ctx.fillStyle = 'red'
+                    
                     ctx.fillText(ascii[i][j], x, y)
                 }
             }
         }
-    }
+    }, [canvas, image])
+
 
     const fileOnChange = (e: any): void => {
         const acceptedFileTypes: string[] = ['jpg', 'jpeg', 'png']
@@ -75,6 +78,7 @@ const App: React.FC = () => {
                 } else {
                     const img = new Image()
                     img.src = URL.createObjectURL(file)
+                    // img.src.style.filter = "invert(100%)"
                     img.onload = () => setImage({
                         html: img, file: URL.createObjectURL(file), error: ''
                     })
@@ -89,14 +93,16 @@ const App: React.FC = () => {
         <>
             <div>
                 <span>Select Image: </span>
-                <input type="file" name="image" onChange={fileOnChange} />
+                <input type="file" name="image" onChange={fileOnChange}/>
                 {image?.file === '' && (
                     <div style={{ color: "red" }}>{image?.error}</div>
                 )}
             </div>
             <canvas ref={canvas} width={500} height={500} />
             <div>
-                <img src={image?.file} width={200} height={200} />
+                {image?.file && (
+                    <img src={image?.file} width={200} height={200} alt="output img"/>
+                )}
             </div>
         </>
     );
