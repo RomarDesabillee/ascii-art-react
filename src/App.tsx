@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 type Image = {
     file: any,
     error: string,
-    html?: HTMLImageElement
+    tag?: HTMLImageElement
 }
 
 const App: React.FC = () => {
@@ -13,15 +13,14 @@ const App: React.FC = () => {
     const canvas = useRef<any>(null)
 
     useEffect((): void => {
-        if (image?.html && canvas) {
+        if (image?.tag && canvas) {
             const txt: string = "@#$%?*+;:,."
-            //.,
             const dim: number = 4
             const w: number = 500 //width and height
             const counter: number = 400
             const ctx: any = canvas.current.getContext('2d')
             ctx.fillStyle = "white"
-            ctx.drawImage(image?.html, 0, 0, w, w)
+            ctx.drawImage(image?.tag, 0, 0, w, w)
 
             let ascii: string[][] = []
             for (let i: number = 0; i < counter; i++) {
@@ -37,10 +36,6 @@ const App: React.FC = () => {
                         let b: number = pixel[k + 2]
                         let alpha: number = pixel[k + 3]
                         let brightness: number = Math.floor((r + g + b + alpha) / 4)
-                        pixel[k] = brightness
-                        pixel[k + 1] = brightness
-                        pixel[k + 2] = brightness
-                        pixel[k + 2] = brightness
                         color += brightness
                     }
                     // console.log(color/pixel.length)
@@ -59,7 +54,6 @@ const App: React.FC = () => {
                     let x: number = i * dim
                     let y: number = j * dim + 8
                     ctx.fillStyle = 'red'
-                    
                     ctx.fillText(ascii[i][j], x, y)
                 }
             }
@@ -69,8 +63,8 @@ const App: React.FC = () => {
 
     const fileOnChange = (e: any): void => {
         const acceptedFileTypes: string[] = ['jpg', 'jpeg', 'png']
-        const file: any = e.target.files[0]
         try {
+            const file: any = e.target.files[0]
             if (file) {
                 const img = file.name.split('.').reverse()[0]
                 if (!acceptedFileTypes.includes(img)) {
@@ -80,11 +74,11 @@ const App: React.FC = () => {
                     img.src = URL.createObjectURL(file)
                     // img.src.style.filter = "invert(100%)"
                     img.onload = () => setImage({
-                        html: img, file: URL.createObjectURL(file), error: ''
+                        tag: img, file: URL.createObjectURL(file), error: ''
                     })
                 }
             }
-        } catch {
+        } finally {
             setImage({ file: '', error: 'Invalid File Type' })
         }
     }
@@ -93,7 +87,7 @@ const App: React.FC = () => {
         <>
             <div>
                 <span>Select Image: </span>
-                <input type="file" name="image" onChange={fileOnChange}/>
+                <input type="file" name="image" onChange={fileOnChange} />
                 {image?.file === '' && (
                     <div style={{ color: "red" }}>{image?.error}</div>
                 )}
@@ -101,7 +95,7 @@ const App: React.FC = () => {
             <canvas ref={canvas} width={500} height={500} />
             <div>
                 {image?.file && (
-                    <img src={image?.file} width={200} height={200} alt="output img"/>
+                    <img src={image?.file} width={200} height={200} alt="output img" />
                 )}
             </div>
         </>
