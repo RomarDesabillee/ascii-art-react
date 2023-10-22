@@ -14,28 +14,28 @@ const App: React.FC = () => {
 
     useEffect((): void => {
         if (image?.tag && canvas) {
-            const txt: string = "@#$%?*+;:,."
-            const dim: number = 4
-            const w: number = 500 //width and height
-            const counter: number = 400
+            const txt = "@#$%?*+;:,."
+            const dim = 4
+            const w = 500 //width and height
+            const counter = 400
             const ctx: any = canvas.current.getContext('2d')
             ctx.fillStyle = "white"
             ctx.drawImage(image?.tag, 0, 0, w, w)
 
             let ascii: string[][] = []
-            for (let i: number = 0; i < counter; i++) {
+            for (let i = 0; i < counter; i++) {
                 let asciiChars: string[] = []
-                for (let j: number = 0; j < counter; j++) {
-                    let x: number = i * dim
-                    let y: number = j * dim + 8
-                    let color: number = 0
+                for (let j = 0; j < counter; j++) {
+                    let x = i * dim
+                    let y = j * dim + 8
+                    let color = 0
                     let pixel = ctx.getImageData(x, y, dim, dim).data;
-                    for (let k: number = 0; k < pixel.length; k += 4) {
-                        let r: number = pixel[k]
-                        let g: number = pixel[k + 1]
-                        let b: number = pixel[k + 2]
-                        let alpha: number = pixel[k + 3]
-                        let brightness: number = Math.floor((r + g + b + alpha) / 4)
+                    for (let k = 0; k < pixel.length; k += 4) {
+                        let r = pixel[k]
+                        let g = pixel[k + 1]
+                        let b = pixel[k + 2]
+                        let alpha = pixel[k + 3]
+                        let brightness = Math.floor((r + g + b + alpha) / 4)
                         color += brightness
                     }
                     // console.log(color/pixel.length)
@@ -49,10 +49,10 @@ const App: React.FC = () => {
             }
             // hide image
             ctx.fillRect(0, 0, w, w)
-            for (let i: number = 0; i < counter; i++) {
-                for (let j: number = 0; j < counter; j++) {
-                    let x: number = i * dim
-                    let y: number = j * dim + 8
+            for (let i = 0; i < counter; i++) {
+                for (let j = 0; j < counter; j++) {
+                    let x = i * dim
+                    let y = j * dim + 8
                     ctx.fillStyle = 'red'
                     ctx.fillText(ascii[i][j], x, y)
                 }
